@@ -1,0 +1,38 @@
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 25vh;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.disabled {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 25vh;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    opacity: 0.6;
+    /* cursor: not-allowed; */
+}
+
+@media (max-width: 500px) {
+   .button {
+        width: 60vh
+   }
+   .disabled {
+       width: 60vh;
+   }
+}
