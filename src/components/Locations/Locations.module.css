@@ -16,13 +16,15 @@ body { /* ADDED */
 
 .header {
   grid-area: header;
-  background-color: #1BC336;
+  background-color:#36486b;
   height: 10vh;
+  text-align: center;
+  font-size: 30px
 }
 
 .main {
   grid-area: main;
-  background-color: #C3A21B;
+  background-color: #618685;
   grid-auto-rows: minmax(100vh, max-content);
   max-height: 305vh;
   min-height: 100vh;
@@ -30,7 +32,7 @@ body { /* ADDED */
 
 .sidebar {
   grid-area: sidebar;
-  background-color: gold;
+  background-color:#36486b;
   overflow: auto;
   max-height: 305vh;
   min-height: 100vh;

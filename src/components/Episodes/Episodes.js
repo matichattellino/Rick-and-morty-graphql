@@ -42,6 +42,7 @@ const Episodes = () => {
                 air_date
                 characters{
                 name
+                image
               }
             }
         }
@@ -79,13 +80,15 @@ const Episodes = () => {
         
     }
 
-     useEffect(() => {     
-            const results = episodesData.filter(episodes =>
+     useEffect(() => {   
+        const results = !searchTerm || searchTerm.length <= 3 
+        ? episodesData 
+        : episodesData.filter(episodes =>
                 episodes.name.toString().toLowerCase().includes(searchTerm)
             );
                 setEpisode(results);
             
-     }, [data, searchTerm])
+     }, [episodesData, searchTerm])
     
 
     if(loading || !data) return <h2>Cargando...</h2>
@@ -93,7 +96,7 @@ const Episodes = () => {
         <>
         <div class={styles.grid}>
            <div className={styles.header}>
-              Rick and Morty searcher
+                EPISODES
            </div>
            <div className={styles.sidebar}>
                <div className={styles.center}>
@@ -164,6 +167,7 @@ const Episodes = () => {
                         isOpen={modalIsOpen}
                         shouldCloseOnOverlayClick={false}
                         onRequestClose={() => setModalIsOpen(false)}
+                        
                         style={
                             {
                                 overlay: {
@@ -195,12 +199,19 @@ const Episodes = () => {
                                 <div>
                                     <li class="list-group-item">
                                     <p style={{textTransform: "uppercase", fontWeight: "bold"}}>Characters:</p>
+                                    <div class="container">
+                                    <div class="row">
                                     {
                                         modalDisplay ? 
                                         modalDisplay.characters.slice(0, 5).map(res => (
+                                        <div class="col-lg-3 p-0 m-1">
+                                            <img style={{ height: 80, width:80}} src={res.image} alt="Imagen" />
                                             <p>{res.name}</p>
+                                        </div>
                                         )) : <p></p>
                                     }
+                                    </div>
+                                </div>
                                     </li>
                                 </div>
                                 <button class="btn btn-primary" onClick={() => setModalIsOpen(false)}>

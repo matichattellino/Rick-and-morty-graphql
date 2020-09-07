@@ -25,7 +25,7 @@ const GetCharacters = ( { client }) => {
             setSearchTermn(e.target.value);   
     };
 
-    const onClear = () => {
+    const onClear = () => { 
         setSearchTermn("");
     }
 
@@ -63,42 +63,39 @@ const GetCharacters = ( { client }) => {
     
 
     const paginate = (data, fetchMore, page) =>
-        fetchMore({
+    fetchMore({
             variables: {
             page
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return previousResult;
-            
-            return fetchMoreResult;
+                if (!fetchMoreResult) return previousResult;
+                return fetchMoreResult;
             }
-           
     });
  
     const onPrev = () => paginate(data, fetchMore, prev);
     const onNext = () => paginate(data, fetchMore, next);
+  
     
-
-     useEffect(() => {     
-            const results = characterData.filter(characters =>
-                characters.name.toString().toLowerCase().includes(searchTerm) ||
-                characters.type.toString().toLowerCase().includes(searchTerm)
-            );
-                setChars(results);
-            
-     }, [data, searchTerm])
+    useEffect(() => {     
+        const results = !searchTerm || searchTerm.length <= 3 ? 
+        characterData 
+        : characterData.filter(characters =>
+            characters.name.toString().toLowerCase().includes(searchTerm) ||
+            characters.type.toString().toLowerCase().includes(searchTerm)
+        );
+       setChars(results);        
+    }, [characterData, searchTerm])  
     
 
     if(loading || !data) return <h2>Cargando...</h2>
 
-    const { id, name, image } = chars;
-    //const { id, name, image } = results;
 
     return ( 
         <>
          <div className={styles.grid}>
             <div className={styles.header}>
-               header characters
+               CHARACTERS
             </div>
             <div className={styles.sidebar}>
                 <div className={styles.center}>

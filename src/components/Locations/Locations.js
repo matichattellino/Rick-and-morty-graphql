@@ -65,7 +65,7 @@ const Locations = ( { client }) => {
             updateQuery: (previousResult, { fetchMoreResult }) => {
             if (!fetchMoreResult) return previousResult;
             
-            return fetchMoreResult;
+            return fetchMoreResult;//[...previousResult, ...fetchMoreResult]
             }
            
     });
@@ -77,13 +77,15 @@ const Locations = ( { client }) => {
         
     }
 
-     useEffect(() => {     
-            const results = locationData.filter(location =>
+     useEffect(() => {  
+            const results = !searchTerm || searchTerm.length <= 3 
+            ? locationData
+            : locationData.filter(location =>
                 location.name.toString().toLowerCase().includes(searchTerm)     
             );
                 setLocations(results);
             
-     }, [data, searchTerm])
+     }, [locationData, searchTerm])
     
 
     if(loading || !data) return <h2>Cargando...</h2>
@@ -92,7 +94,7 @@ const Locations = ( { client }) => {
         <>
          <div class={styles.grid}>
             <div className={styles.header}>
-               header characters
+               LOCATIONS
             </div>
             <div className={styles.sidebar}>
                 <div className={styles.center}>

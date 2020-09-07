@@ -7,9 +7,6 @@ const Filter = ( { historyCharacter, historyEpisode, historyLocation }) => {
     return ( 
         <div>
             <div>
-                <h1>Filter</h1>
-            </div>
-            <div>
                 <Link to="/">
                     <button
                         className={historyCharacter === "/" ? styles.button : styles.disabled}   
