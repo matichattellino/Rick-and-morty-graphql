@@ -2,26 +2,21 @@ import React, { useState, useEffect} from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from 'react-apollo';
 import styles from './Locations.module.css'
-import Filter from '../Filter/Filter'
 import Pagination from '../Pagination/Pagination'
-import {  useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout';
 
 
 const Locations = ( { client }) => {
-    const [ searchTerm, setSearchTermn ] = useState("");
+    const [ searchTerm, setSearchTerm ] = useState("");
     const [ locations, setLocations ] = useState([]);
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [ modalDisplay, setModalDisplay ] = useState("");
 
-    const history = useHistory();
-    const historyLocation = history.location.pathname;
+    const handleChange = e => setSearchTerm(e.target.value);
 
-    const handleChange = e => setSearchTermn(e.target.value);
-
-    const onClear = () => setSearchTermn("");
+    const onClear = () => setSearchTerm("");
 
     let query = gql`
       query($page:Int, $filter: FilterLocation) {
@@ -87,6 +82,8 @@ const Locations = ( { client }) => {
         }
         setLocations(results);    
      }, [locationData, searchTerm])
+
+     if(loading || !data) return <h2>Cargando...</h2>
 
     return ( 
         <Layout title="LOCATIONS">

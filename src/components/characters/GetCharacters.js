@@ -8,15 +8,14 @@ import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout'
 
 const GetCharacters = () => {
-    const [ searchTerm, setSearchTermn ] = useState("");
+    const [ searchTerm, setSearchTerm ] = useState("");
     const [ chars, setChars ] = useState([]);
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [ modalDisplay, setModalDisplay ] = useState("");
 
-    const handleChange = e => setSearchTermn(e.target.value);   
+    const handleChange = e => setSearchTerm(e.target.value);   
     
-    const onClear = () => setSearchTermn("");
-
+    const onClear = () => setSearchTerm("");
 
     let query = gql`
         query($page:Int, $filter: FilterCharacter) {
@@ -63,12 +62,12 @@ const GetCharacters = () => {
 
    
     useEffect(() => {
-        const characterFilter = characterData.filter(characters =>
-            characters.name.toString().toLowerCase().includes(searchTerm) ||
-            characters.type.toString().toLowerCase().includes(searchTerm)
+        const characterFilter = characterData.filter(character =>
+            character.name.toString().toLowerCase().includes(searchTerm) ||
+            character.type.toString().toLowerCase().includes(searchTerm)
         );
         let results; 
-        
+
         if( !searchTerm || searchTerm.length <= 3) {
             results = characterData;
         } else {

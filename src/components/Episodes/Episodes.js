@@ -2,25 +2,20 @@ import React, { useState, useEffect} from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from 'react-apollo';
 import styles from './Episodes.module.css'
-import Filter from '../Filter/Filter'
 import Pagination from '../Pagination/Pagination'
-import {  useHistory } from 'react-router-dom';
 import Modal from 'react-modal'
 import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout';
 
 const Episodes = () => {
-    const [ searchTerm, setSearchTermn ] = useState("");
+    const [ searchTerm, setSearchTerm ] = useState("");
     const [ episode, setEpisode ] = useState([]);
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [ modalDisplay, setModalDisplay ] = useState("");
 
-    const history = useHistory();
-    const historyEpisode = history.location.pathname;
+    const handleChange = e => setSearchTerm(e.target.value);
 
-    const handleChange = e => setSearchTermn(e.target.value);
-
-    const onClear = () => setSearchTermn("");
+    const onClear = () => setSearchTerm("");
     
     let query = gql`
         query($page:Int, $filter: FilterEpisode) {
@@ -83,6 +78,8 @@ const Episodes = () => {
         }  
         setEpisode(results);  
      }, [episodesData, searchTerm])
+
+     if(loading || !data) return <h2>Cargando...</h2>
     
     return (  
         <Layout title="EPISODES">
@@ -145,8 +142,7 @@ const Episodes = () => {
                     <Modal 
                         isOpen={modalIsOpen}
                         shouldCloseOnOverlayClick={false}
-                        onRequestClose={() => setModalIsOpen(false)}
-                        
+                        onRequestClose={() => setModalIsOpen(false)}  
                         style={
                             {
                                 overlay: {
