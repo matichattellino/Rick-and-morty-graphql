@@ -8,23 +8,23 @@ const Pagination = ( { next, prev, onNext, onPrev, pages}) => {
       };
     return ( 
         <div className="row justify-content-center">
-        <nav aria-label="Page navigation example">
-            <ul className="pagination">
-                {prev && (
-                    <li className="page-item" onClick={onPrev}><a className="page-link" href="#">{prev}</a></li>
-                )}     
-                <li className="page-item" data-testid="pagination-page">
-                    <a className="page-link" href="#">{`${currentPage()}/${pages}`}</a>
-                </li>
-                {
+            <nav aria-label="Page navigation">
+                <ul className="pagination">
+                    {prev && (
+                        <li className="page-item" onClick={onPrev}><a className="page-link" href="#">{prev}</a></li>
+                     )}     
+                        <li className="page-item">
+                            <a className="page-link" href="#">{`${currentPage()}/${pages}`}</a>
+                        </li>
+                    {
                     next && (
                         <li className="page-item" onClick={onNext}>
                             <a className="page-link" href="#">{next}</a>
                         </li>
-                    )
-                } 
-            </ul>
-        </nav>
+                        )
+                    } 
+                </ul>
+            </nav>
         </div>
      );
 }

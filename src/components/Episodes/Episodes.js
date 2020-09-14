@@ -7,6 +7,7 @@ import Pagination from '../Pagination/Pagination'
 import {  useHistory } from 'react-router-dom';
 import Modal from 'react-modal'
 import PropTypes from 'prop-types';
+import Layout from '../Layout/Layout';
 
 const Episodes = () => {
     const [ searchTerm, setSearchTermn ] = useState("");
@@ -17,15 +18,10 @@ const Episodes = () => {
     const history = useHistory();
     const historyEpisode = history.location.pathname;
 
-    const handleChange = e => {
-            setSearchTermn(e.target.value);   
-    };
+    const handleChange = e => setSearchTermn(e.target.value);
 
-    const onClear = () => {
-        setSearchTermn("");
-    }
-
-
+    const onClear = () => setSearchTermn("");
+    
     let query = gql`
         query($page:Int, $filter: FilterEpisode) {
         episodes(page:$page, filter:$filter){
@@ -54,8 +50,6 @@ const Episodes = () => {
         fetchPolicy: 'cache-and-network'
     });
 
-    console.log(data);
-
     const episodesData = data ? data['episodes']['results'] : [];
     const { pages, next, prev, count } = data ? data['episodes']['info'] : {};
     
@@ -76,56 +70,42 @@ const Episodes = () => {
     const onPrev = () => paginate(data, fetchMore, prev);
     const onNext = () => paginate(data, fetchMore, next);
     
-    if(searchTerm.length >= "3") {
-        
-    }
-
      useEffect(() => {   
-        const results = !searchTerm || searchTerm.length <= 3 
-        ? episodesData 
-        : episodesData.filter(episodes =>
-                episodes.name.toString().toLowerCase().includes(searchTerm)
-            );
-                setEpisode(results);
-            
+        const episodeFilter = episodesData.filter(episode =>
+            episode.name.toString().toLowerCase().includes(searchTerm)
+        );
+        let results; 
+        
+        if(!searchTerm || searchTerm.length <= 3) {
+            results = episodesData;
+        } else {
+            results = episodeFilter;
+        }  
+        setEpisode(results);  
      }, [episodesData, searchTerm])
     
-
-    if(loading || !data) return <h2>Cargando...</h2>
     return (  
-        <>
-        <div class={styles.grid}>
-           <div className={styles.header}>
-                EPISODES
-           </div>
-           <div className={styles.sidebar}>
-               <div className={styles.center}>
-                   <Filter historyEpisode={historyEpisode} />
-               </div>
-           </div>
-           <div className={styles.main}>
-           <div class="container">
-   <br/>
-   <div class="row justify-content-center">
-                       <div class="col-12 col-md-10 col-lg-8">
-                           <form class="card card-sm" 
-                                 //onSubmit={filter}
-                           >
-                               <div class="card-body row no-gutters align-items-center">
+        <Layout title="EPISODES">
+             <div className="container">
+                <br/>
+                <div className="row justify-content-center">
+                       <div className="col-12 col-md-10 col-lg-8">
+                           <form class="card card-sm" >
+                               <div className="card-body row no-gutters align-items-center">
                                   
-                                   <div class="col">   
+                                   <div className="col">   
                                        <input 
-                                           class="form-control form-control-lg form-control-borderless" 
+                                           className="form-control form-control-lg form-control-borderless" 
                                            type="text" 
                                            placeholder="Search topics or keywords" 
                                            value={searchTerm}
                                            onChange={handleChange}
                                        />
                                    </div>
-                                   <div class="col-auto">
+                                   <div className="col-auto">
                                    <button 
                                        type="button" 
-                                       class="close" aria-label="Close"
+                                       className="close" aria-label="Close"
                                        onClick={onClear}
                                    >
                                        <span aria-hidden="true">&times;</span>
@@ -134,23 +114,22 @@ const Episodes = () => {
                                </div>
                            </form>
                        </div>
-                   </div>
-        </div>
+                </div>
+            </div>
            <div>
-               <div class="col-12 p-5 row">
+               <div className="col-12 p-5 row">
                    {episode.map(epis => (
-                       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                           <div class="card mt-1">
+                       <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+                           <div className="card mt-1">
                            {epis.episode}
-                               <div class="card-body text-center">
-                                   <h5 class="card-title">
-                                       
+                               <div className="card-body text-center">
+                                   <h5 className="card-title">
                                        {epis.name}
                                    </h5>
                                    <button 
-                                        type="button" 
-                                        style={{ width: "12rem"}} 
-                                        class="btn btn-secondary btn-sm"
+                                        type="button"
+                                        
+                                        className="btn btn-secondary btn-lg"
                                         onClick={() => {
                                                 setModalIsOpen(true);
                                                 setModalDisplay(epis);
@@ -191,45 +170,42 @@ const Episodes = () => {
                             }
                         }
                     >
-                        <div class="card">
-                            <div class="list-group list-group-flush">
-                                <li class="list-group-item">{modalDisplay.name}</li>
-                                <li class="list-group-item">{modalDisplay.episode}</li>
-                                <li class="list-group-item">{modalDisplay.air_date}</li>
+                        <div className="card">
+                            <div className="list-group list-group-flush">
+                                <li className="list-group-item">{modalDisplay.name}</li>
+                                <li className="list-group-item">{modalDisplay.episode}</li>
+                                <li className="list-group-item">{modalDisplay.air_date}</li>
                                 <div>
-                                    <li class="list-group-item">
-                                    <p style={{textTransform: "uppercase", fontWeight: "bold"}}>Characters:</p>
-                                    <div class="container">
-                                    <div class="row">
-                                    {
-                                        modalDisplay ? 
-                                        modalDisplay.characters.slice(0, 5).map(res => (
-                                        <div class="col-lg-3 p-0 m-1">
-                                            <img style={{ height: 80, width:80}} src={res.image} alt="Imagen" />
-                                            <p>{res.name}</p>
+                                    <li className="list-group-item">
+                                        <p className={styles.text}>Characters:</p>
+                                        <div className="container">
+                                            <div className="row">
+                                            {
+                                                modalDisplay &&
+                                                modalDisplay.characters.slice(0, 5).map(res => (
+                                                <div className="col-lg-3 p-0 m-1">
+                                                    <img style={{ height: 80, width: 80}} src={res.image} alt="Imagen" />
+                                                    <p>{res.name}</p>        
+                                                </div>
+                                                ))
+                                            }
+                                            </div>
                                         </div>
-                                        )) : <p></p>
-                                    }
-                                    </div>
-                                </div>
                                     </li>
                                 </div>
-                                <button class="btn btn-primary" onClick={() => setModalIsOpen(false)}>
-                                Close
-                                </button>
+                                    <button className="btn btn-primary" onClick={() => setModalIsOpen(false)}>
+                                        Close
+                                    </button>
                             </div>
-                        </div>
+                        </div>      
                     </Modal>
-               </div>
-               {episodesData && (
-                  <Pagination prev={prev} next={next} onPrev={onPrev} onNext={onNext} pages={pages} />
-               )}
-               </div>   
-           </div>
-       </div>  
-       </>
-    )
-}
+                </div>
+                </div>
+                    {episodesData && (
+                        <Pagination prev={prev} next={next} onPrev={onPrev} onNext={onNext} pages={pages} />
+                    )}
+        </Layout>
+    )}
 
 Episodes.propTypes = {
     data: PropTypes.shape({
@@ -247,7 +223,7 @@ Episodes.propTypes = {
                 air_date: PropTypes.string.isRequired,
                 characters: PropTypes.shape({
                         name: PropTypes.string.isRequired
-            }).isRequired,
+                }).isRequired,
             }).isRequired,
         }).isRequired
     }).isRequired   

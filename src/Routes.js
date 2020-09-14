@@ -4,7 +4,6 @@ import Locations from './components/Locations/Locations'
 import Episodes from './components/Episodes/Episodes'
 import GetCharacters from './components/characters/GetCharacters'
 
-
 function Routes() {
     return (
         <Router>
@@ -12,7 +11,6 @@ function Routes() {
               <Route exact path="/" component={GetCharacters} />
               <Route exact path="/episodes" component={Episodes} />
               <Route exact path="/locations" component={Locations} />
-              
           </Switch>
         </Router>
     )

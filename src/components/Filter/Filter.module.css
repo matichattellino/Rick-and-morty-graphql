@@ -13,7 +13,7 @@
 }
 
 .disabled {
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -21,12 +21,13 @@
     text-decoration: none;
     display: inline-block;
     width: 25vh;
-    font-size: 16px;
+    font-size: 1rem;
     margin: 4px 2px;
     cursor: pointer;
     opacity: 0.6;
-    /* cursor: not-allowed; */
 }
+
+
 
 @media (max-width: 500px) {
    .button {

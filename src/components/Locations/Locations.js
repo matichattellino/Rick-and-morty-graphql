@@ -7,6 +7,7 @@ import Pagination from '../Pagination/Pagination'
 import {  useHistory } from 'react-router-dom';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
+import Layout from '../Layout/Layout';
 
 
 const Locations = ( { client }) => {
@@ -18,13 +19,9 @@ const Locations = ( { client }) => {
     const history = useHistory();
     const historyLocation = history.location.pathname;
 
-    const handleChange = e => {
-            setSearchTermn(e.target.value);   
-    };
+    const handleChange = e => setSearchTermn(e.target.value);
 
-    const onClear = () => {
-        setSearchTermn("");
-    }
+    const onClear = () => setSearchTermn("");
 
     let query = gql`
       query($page:Int, $filter: FilterLocation) {
@@ -51,7 +48,6 @@ const Locations = ( { client }) => {
         notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
     });
-    console.log(data);
 
     const locationData = data ? data['locations']['results'] : [];
     const { pages, next, prev, count } = data ? data['locations']['info'] : {};
@@ -78,144 +74,129 @@ const Locations = ( { client }) => {
     }
 
      useEffect(() => {  
-            const results = !searchTerm || searchTerm.length <= 3 
-            ? locationData
-            : locationData.filter(location =>
-                location.name.toString().toLowerCase().includes(searchTerm)     
-            );
-                setLocations(results);
-            
+        const locationFilter = locationData.filter(location =>
+            location.name.toString().toLowerCase().includes(searchTerm) ||
+            location.type.toString().toLowerCase().includes(searchTerm)
+        );
+        let results; 
+        
+        if( !searchTerm || searchTerm.length <= 3) {
+            results = locationData;
+        } else {
+            results = locationFilter;
+        }
+        setLocations(results);    
      }, [locationData, searchTerm])
-    
-
-    if(loading || !data) return <h2>Cargando...</h2>
 
     return ( 
-        <>
-         <div class={styles.grid}>
-            <div className={styles.header}>
-               LOCATIONS
-            </div>
-            <div className={styles.sidebar}>
-                <div className={styles.center}>
-                    <Filter historyLocation={historyLocation} />
-                </div>
-            </div>
-            <div className={styles.main}>
-            <div class="container">
-    <br/>
-	<div class="row justify-content-center">
-                        <div class="col-12 col-md-10 col-lg-8">
-                            <form class="card card-sm" 
-                                  //onSubmit={filter}
-                            >
-                                <div class="card-body row no-gutters align-items-center">
-                                   
-                                    <div class="col">   
-                                        <input 
-                                            class="form-control form-control-lg form-control-borderless" 
-                                            type="text" 
-                                            placeholder="Search topics or keywords" 
-                                            value={searchTerm}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                    <div class="col-auto">
-                                    <button 
-                                        type="button" 
-                                        class="close" aria-label="Close"
-                                        onClick={onClear}
-                                    >
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
+        <Layout title="LOCATIONS">
+                <div className="container">
+                        <br/>
+                        <div className="row justify-content-center">
+                                <div className="col-12 col-md-10 col-lg-8">
+                                    <form className="card card-sm">
+                                        <div className="card-body row no-gutters align-items-center">
+                                            <div className="col">   
+                                                <input 
+                                                    className="form-control form-control-lg form-control-borderless" 
+                                                    type="text" 
+                                                    placeholder="Search topics or keywords" 
+                                                    value={searchTerm}
+                                                    onChange={handleChange}
+                                                />
+                                            </div>
+                                            <div className="col-auto">
+                                                <button 
+                                                    type="button" 
+                                                    className="close" aria-label="Close"
+                                                    onClick={onClear}
+                                                >
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
                         </div>
-                    </div>
-         </div>
-            <div>
-                <div class="col-12 p-5 row">
-                    {locations.map(loc => (
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                            <div class="card mt-1">
-                                    {loc.name}
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                    {loc.dimension}
-                                    </h5>
-                                    <button type="button" 
-                                        style={{ width: "12rem"}} 
-                                        class="btn btn-secondary btn-sm"
-                                         onClick={() => {
-                                                setModalIsOpen(true);
-                                                setModalDisplay(loc);
-                                            }}
-                                    >
-                                            Details
-                                    </button>
+                </div>
+                <div>
+                    <div className="col-12 p-5 row">
+                        {locations.map(loc => (
+                            <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div className="card mt-1">
+                                        {loc.name}
+                                    <div className="card-body text-center">
+                                        <h5 className="card-title">
+                                        {loc.dimension}
+                                        </h5>
+                                        <button type="button" 
+                                            className="btn btn-secondary btn-sm btn-lg"
+                                            onClick={() => {
+                                                    setModalIsOpen(true);
+                                                    setModalDisplay(loc);
+                                                }}
+                                        >
+                                                Details
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
-                    }
-                      <Modal 
-                        isOpen={modalIsOpen}
-                        shouldCloseOnOverlayClick={false}
-                        onRequestClose={() => setModalIsOpen(false)}
-                        style={
-                            {
-                                overlay: {
-                                   
-                                },
-                                content: {
-                                    position: "center",
-                                    height: "73vh",
-                                    width: "60vh",
-                                    color: "black",
-                                    top: "20px",
-                                    margin: "0 auto",
-                                    border: '1px solid #ccc',
-                                    background: '#eaece5',
-                                    overflow: 'auto',
-                                    WebkitOverflowScrolling: 'touch',
-                                    borderRadius: '10px',
-                                    outline: 'none',
-                                    padding: '20px'
+                        ))
+                        }
+                        <Modal 
+                            isOpen={modalIsOpen}
+                            shouldCloseOnOverlayClick={false}
+                            onRequestClose={() => setModalIsOpen(false)}
+                            style={
+                                {
+                                    overlay: {
+                                    
+                                    },
+                                    content: {
+                                        position: "center",
+                                        height: "73vh",
+                                        width: "60vh",
+                                        color: "black",
+                                        top: "20px",
+                                        margin: "0 auto",
+                                        border: '1px solid #ccc',
+                                        background: '#eaece5',
+                                        overflow: 'auto',
+                                        WebkitOverflowScrolling: 'touch',
+                                        borderRadius: '10px',
+                                        outline: 'none',
+                                        padding: '20px'
+                                    }
                                 }
                             }
-                        }
-                    >
-                        <div class="card">
-                            <div class="list-group list-group-flush">
-                                <li class="list-group-item">{modalDisplay.name}</li>
-                                <li class="list-group-item">{modalDisplay.dimension}</li>
-                                <li class="list-group-item">{modalDisplay.type}</li>
-                                <div>
-                                    <li class="list-group-item">
-                                    <p style={{textTransform: "uppercase", fontWeight: "bold"}}>Residents:</p>
-                                    {
-                                        modalDisplay ? 
-                                        modalDisplay.residents.slice(0, 5).map(res => (
-                                            <p>{res.name}</p>
-                                        )) : <p></p>
-                                    }
-                                    </li>
+                        >
+                            <div className="card">
+                                <div className="list-group list-group-flush">
+                                    <li className="list-group-item">{modalDisplay.name}</li>
+                                    <li className="list-group-item">{modalDisplay.dimension}</li>
+                                    <li className="list-group-item">{modalDisplay.type}</li>
+                                    <div>
+                                        <li className="list-group-item">
+                                        <p className={styles.title}>Residents:</p>
+                                        {
+                                            modalDisplay && modalDisplay.residents.slice(0, 5).map(res => (
+                                                <p>{res.name}</p>
+                                            ))
+                                        }
+                                        </li>
+                                    </div>
+                                    <button className="btn btn-primary" onClick={() => setModalIsOpen(false)}>
+                                    Close
+                                    </button>
                                 </div>
-                                <button class="btn btn-primary" onClick={() => setModalIsOpen(false)}>
-                                Close
-                                </button>
                             </div>
-                        </div>
-                    </Modal>
-                </div>
-                {locationData && (
-                   <Pagination prev={prev} next={next} onPrev={onPrev} onNext={onNext} pages={pages} />
-                )}
-                </div>   
-            </div>
-        </div>  
-        </>
+                        </Modal>
+                    </div>
+                    </div>
+                        {locationData && (
+                        <Pagination prev={prev} next={next} onPrev={onPrev} onNext={onNext} pages={pages} />
+                        )}
+       </Layout>
      );
 }
 
@@ -234,7 +215,7 @@ Locations.propTypes = {
                 gender: PropTypes.string.isRequired,
                 residents: PropTypes.shape({
                     name: PropTypes.string.isRequired
-                }).isRequired,
+                 }).isRequired,
             }).isRequired,
         }).isRequired
     }).isRequired
