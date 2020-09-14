@@ -6,6 +6,7 @@ import Pagination from '../Pagination/Pagination'
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout';
+import { GET_LOCATIONS_QUERY } from '../../queries/Queries';
 
 
 const Locations = ( { client }) => {
@@ -18,27 +19,7 @@ const Locations = ( { client }) => {
 
     const onClear = () => setSearchTerm("");
 
-    let query = gql`
-      query($page:Int, $filter: FilterLocation) {
-        locations(page:$page, filter:$filter){
-            info{
-                count
-                pages
-                next
-                prev
-        }
-        results{
-            name
-            dimension
-            type
-            residents {
-              name
-            }
-        }
-  }
-}
-    `
-    const { data, loading, error, fetchMore} = useQuery(query, {
+    const { data, loading, error, fetchMore} = useQuery(GET_LOCATIONS_QUERY(gql), {
         variables: { page: 1 },
         notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
@@ -56,7 +37,7 @@ const Locations = ( { client }) => {
             updateQuery: (previousResult, { fetchMoreResult }) => {
             if (!fetchMoreResult) return previousResult;
             
-            return fetchMoreResult;//[...previousResult, ...fetchMoreResult]
+            return fetchMoreResult;
             }
            
     });

@@ -1,11 +1,11 @@
 import React, { useState, useEffect} from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from 'react-apollo';
-import styles from './Characters.module.css'
 import Pagination from '../Pagination/Pagination'
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout'
+import { GET_CHARACTERS_QUERY, GET_EPISODES_QUERY } from '../../queries/Queries'
 
 const GetCharacters = () => {
     const [ searchTerm, setSearchTerm ] = useState("");
@@ -17,27 +17,8 @@ const GetCharacters = () => {
     
     const onClear = () => setSearchTerm("");
 
-    let query = gql`
-        query($page:Int, $filter: FilterCharacter) {
-            characters(page:$page, filter: $filter){
-                info{
-                    count
-                    pages
-                    next
-                    prev
-                }
-                results{
-                    name
-                    id
-                    image
-                    type
-                   gender
-                   species
-                }
-            }
-        }
-    `
-    const { data, loading, error, fetchMore} = useQuery(query, {
+
+    const { data, loading, error, fetchMore} = useQuery(GET_CHARACTERS_QUERY(gql), {
         variables: { page: 1 },
         notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
@@ -125,8 +106,7 @@ const GetCharacters = () => {
                                                 setModalDisplay(char);
                                             }}
                                             type="button" 
-                                            style={{ width: "12rem"}} 
-                                            className="btn btn-secondary btn-sm"
+                                            className= "btn btn-secondary btn-lg"
                                         >
                                             Details
                                     </button>
@@ -135,7 +115,7 @@ const GetCharacters = () => {
                         </div>
                      ))
                      }
-                        <div className={styles.modal}>
+                        <div>
                             <Modal 
                                     isOpen={modalIsOpen}
                                     shouldCloseOnOverlayClick={false}
