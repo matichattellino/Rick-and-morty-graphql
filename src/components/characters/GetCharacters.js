@@ -1,4 +1,5 @@
 import React, { useState, useEffect} from 'react';
+import { connect } from 'react-redux'
 import { gql } from 'apollo-boost';
 import { useQuery } from 'react-apollo';
 import Pagination from '../Pagination/Pagination'
@@ -7,23 +8,24 @@ import PropTypes from 'prop-types';
 import Layout from '../Layout/Layout'
 import { GET_CHARACTERS_QUERY, GET_EPISODES_QUERY } from '../../queries/Queries'
 
-const GetCharacters = () => {
+const GetCharacters = ( { charsdata }) => {
     const [ searchTerm, setSearchTerm ] = useState("");
     const [ chars, setChars ] = useState([]);
     const [ modalIsOpen, setModalIsOpen ] = useState(false);
     const [ modalDisplay, setModalDisplay ] = useState("");
 
     const handleChange = e => setSearchTerm(e.target.value);   
+    console.log(charsdata);
     
     const onClear = () => setSearchTerm("");
 
-
-    const { data, loading, error, fetchMore} = useQuery(GET_CHARACTERS_QUERY(gql), {
-        variables: { page: 1 },
-        notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-and-network'
-    });
-
+    // const { data, loading, error, fetchMore} = useQuery(GET_CHARACTERS_QUERY(gql), {
+    //     variables: { page: 1 },
+    //     notifyOnNetworkStatusChange: true,
+    //     fetchPolicy: 'cache-and-network'
+    // });
+    
+    const { data, loading, error, fetchMore } = charsdata;
     const characterData = data ? data['characters']['results'] : [];
     const { pages, next, prev, count } = data ? data['characters']['info'] : {};
     
@@ -122,9 +124,6 @@ const GetCharacters = () => {
                                     onRequestClose={() => setModalIsOpen(false)}
                                     style={
                                         {
-                                            overlay: {
-                                            
-                                            },
                                             content: {
                                                 position: "center",
                                                 height: "90vh",
@@ -196,6 +195,10 @@ GetCharacters.propTypes = {
     }).isRequired
 };
 
+function mapStateToProps(state){
+    return {
+        charsdata: state.chars
+    }
+}
 
-
-export default GetCharacters;
+export default connect(mapStateToProps)(GetCharacters);

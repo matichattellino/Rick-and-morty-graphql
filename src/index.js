@@ -7,22 +7,24 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo'
 import ApolloClient from 'apollo-boost'
+import { Provider } from 'react-redux';
+import generateStore from './redux/store'
+
+let store = generateStore()
 
 const client = new ApolloClient({
   uri: 'https://rickandmortyapi.com/graphql'
-}) 
+});
 
 ReactDOM.render(
   <BrowserRouter>
       <ApolloProvider client={client}>
-        <Routes />
-        <App />
+        <Provider store={store}>
+          <Routes />
+          <App /> 
+        </Provider>
       </ApolloProvider>
   </BrowserRouter>,
-  // <React.StrictMode>
-  //   <Routes />
-  //   <App />
-  // </React.StrictMode>,
   document.getElementById('root')
 );
 
